@@ -1,0 +1,28 @@
+---
+# tasks file for nginx_proxy
+
+- name: Установка Nginx
+  apt:
+    name: "nginx"
+    state: present
+  when: "'vm_1' in inventory_hostname"
+
+- name: Конфиг прокси
+  ansible.builtin.template:
+    src: proxy.j2
+    dest: /etc/nginx/sites-available/proxy.conf
+  when: "'vm_1' in inventory_hostname" # Выполнится только тогда, когда в имени есть vm_1
+  
+- name: Удаление дефлотного конфига
+  ansible.builtin.file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  when: "'vm_1' in inventory_hostname" # Выполнится только тогда, когда в имени есть vm_1
+  
+- name: Длобавление линка на конфиг
+  ansible.builtin.file:
+    src: /etc/nginx/sites-available/proxy.conf
+    dest: /etc/nginx/sites-enabled/proxy
+    state: link
+  when: "'vm_1' in inventory_hostname" # Выполнится только тогда, когда в имени есть vm_1
+  notify: "Nginx Reloader"

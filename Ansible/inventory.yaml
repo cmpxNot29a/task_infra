@@ -1,0 +1,19 @@
+---
+linux: # Группа хостов
+  hosts:
+    vm_3:
+      ansible_host: 51.250.1.8 # Адрес машины
+  children: # Обозначение, что будет подгруппа хостов
+    nginx: # Имя подгруппы хостов
+      hosts: # Узлы группы
+        vm_1: # Имя машины
+          ansible_host: 51.250.79.42 # Адрес машины
+        vm_2: # Имя машины
+          ansible_host: 51.250.3.177 # Адрес машины
+  vars: # Переменные, доступные и/или используемые для всех подгрупп
+    ansible_user: "yc-sa-my-ansible"
+    connection_protocol: ssh # тип подключения
+    ansible_ssh_private_key_file: "Path to the private key file" # Необходимо добаить путь до приватного ключа сервисной учетки с правами compute.osAdminLogin 
+    ansible_become: true # Становиться ли другим пользователем после подключения
+    ansible_become_user: root # На какого пользователя переключиться после подключения
+
